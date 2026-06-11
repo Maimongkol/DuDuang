@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ดวงชะตา · ไพ่ทาโรต์ Rider Waite</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:    #0d0b12;
+  --ink2:   #141020;
+  --vellum: #f5edd6;
+  --aged:   #e8d9b0;
+  --gold:   #b8902a;
+  --gold2:  #d4a843;
+  --gold3:  #f0c96a;
+  --crimson:#8b1a1a;
+  --crim2:  #a82020;
+  --sage:   #2d4a3e;
+  --text:   #1a1228;
+  --text2:  #5a4e3a;
+  --border: rgba(184,144,42,0.3);
+  --r: 10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Sarabun',sans-serif;
+  background:var(--ink);
+  color:var(--vellum);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── NOISE TEXTURE overlay ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* ── PARCHMENT bg pattern ── */
+.parchment-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(184,144,42,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 90%, rgba(139,26,26,.05) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(45,74,62,.04) 0%, transparent 70%);
+}
+
+#root{position:relative;z-index:1;min-height:100vh}
+
+/* ══════════════════════════════
+   AUTH PAGE
+══════════════════════════════ */
+.auth-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.auth-box{
+  width:100%;max-width:400px;
+  background:linear-gradient(160deg,#1a1528 0%,#0f0d18 100%);
+  border:1px solid var(--border);border-radius:20px;
+  padding:48px 36px;
+  box-shadow:0 0 80px rgba(184,144,42,.08),0 0 0 1px rgba(184,144,42,.05);
+}
+.brand-mark{
+  text-align:center;margin-bottom:36px;
+}
+.brand-moon{
+  display:block;font-size:3rem;margin-bottom:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gold3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 16px rgba(212,168,67,.4));
+  animation:glow 4s ease-in-out infinite alternate;
+}
+@keyframes glow{from{filter:drop-shadow(0 0 8px rgba(212,168,67,.3))}to{filter:drop-shadow(0 0 24px rgba(212,168,67,.7))}}
+.brand-title{
+  font-family:'Cinzel Decorative',cursive;
+  font-size:1.25rem;line-height:1.4;letter-spacing:.06em;
+  background:linear-gradient(135deg,var(--gold),var(--gold3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.brand-sub{color:var(--text2);font-size:.8rem;margin-top:6px;letter-spacing:.12em;color:#8a7a5a}
+
+.tab-row{display:flex;gap:4px;background:rgba(255,255,255,.04);border-radius:10px;padding:3px;margin-bottom:24px}
+.tab{
+  flex:1;padding:9px;border:none;background:transparent;
+  color:#6a5e48;border-radius:8px;cursor:pointer;
+  font-family:'Sarabun',sans-serif;font-size:.9rem;transition:all .25s;
+}
+.tab.on{background:rgba(184,144,42,.2);color:var(--gold2);border:1px solid rgba(184,144,42,.25)}
+
+.field{
+  width:100%;padding:11px 15px;margin-bottom:10px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(184,144,42,.2);border-radius:8px;
+  color:var(--vellum);font-family:'Sarabun',sans-serif;font-size:.95rem;
+  transition:border-color .25s;display:block;
+}
+.field:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,144,42,.1)}
+.field::placeholder{color:#5a5040}
+
+.act-btn{
+  width:100%;padding:13px;margin-top:8px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold3) 100%);
+  color:var(--ink);font-family:'Cinzel Decorative',cursive;font-size:.85rem;
+  cursor:pointer;letter-spacing:.06em;transition:all .3s;font-weight:700;
+}
+.act-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(184,144,42,.4)}
+.err-msg{color:#c05050;font-size:.83rem;text-align:center;margin-top:8px;min-height:1.2em}
+
+/* ══════════════════════════════
+   APP SHELL
+══════════════════════════════ */
+.shell{display:flex;flex-direction:column;min-height:100vh}
+
+.topbar{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;
+  background:rgba(13,11,18,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-logo{
+  font-family:'Cinzel Decorative',cursive;font-size:.95rem;letter-spacing:.06em;
+  background:linear-gradient(135deg,var(--gold),var(--gold3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-user{color:#8a7a5a;font-size:.82rem}
+.ghost-btn{
+  padding:5px 13px;border:1px solid rgba(184,144,42,.25);
+  background:transparent;color:#8a7a5a;border-radius:6px;
+  cursor:pointer;font-family:'Sarabun',sans-serif;font-size:.8rem;transition:all .25s;
+}
+.ghost-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+.navbar{
+  display:flex;gap:2px;padding:10px 14px;
+  background:rgba(10,8,16,.8);border-bottom:1px solid rgba(184,144,42,.12);
+  position:sticky;top:53px;z-index:190;
+}
+.nav{
+  flex:1;padding:9px 4px;border:none;background:transparent;
+  color:#5a5040;border-radius:7px;cursor:pointer;
+  font-family:'Sarabun',sans-serif;font-size:.85rem;transition:all .25s;
+}
+.nav.on{
+  background:rgba(184,144,42,.12);color:var(--gold2);
+  border:1px solid rgba(184,144,42,.2);
+}
+
+.sec{display:none;animation:fadeIn .35s ease}
+.sec.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hidden{display:none!important}
+
+.wrap{max-width:960px;margin:0 auto;padding:28px 16px}
+
+.sec-head{text-align:center;margin-bottom:32px}
+.sec-head h2{
+  font-family:'Cinzel Decorative',cursive;font-size:1.2rem;letter-spacing:.08em;
+  color:var(--gold2);margin-bottom:8px;
+}
+.sec-head p{color:#8a7a5a;font-size:.9rem}
+
+/* ══════════════════════════════
+   FORM CARD
+══════════════════════════════ */
+.card-panel{
+  background:linear-gradient(160deg,rgba(26,21,40,.9),rgba(15,13,24,.95));
+  border:1px solid var(--border);border-radius:16px;padding:28px;
+  box-shadow:0 4px 40px rgba(0,0,0,.4);
+}
+.lbl{display:block;color:var(--gold);font-size:.82rem;letter-spacing:.06em;margin-bottom:5px;margin-top:18px}
+.lbl:first-child{margin-top:0}
+textarea.field{min-height:90px;resize:vertical}
+
+.main-btn{
+  display:inline-block;padding:12px 30px;margin-top:18px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gold3));
+  color:var(--ink);font-family:'Cinzel Decorative',cursive;font-size:.82rem;font-weight:700;
+  cursor:pointer;letter-spacing:.05em;transition:all .3s;
+}
+.main-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(184,144,42,.4)}
+.main-btn.sm{padding:8px 20px;font-size:.78rem;margin-top:10px}
+.main-btn.red{background:linear-gradient(135deg,var(--crimson),var(--crim2));color:#f5edd6}
+
+/* ══════════════════════════════
+   78-CARD DECK
+══════════════════════════════ */
+.deck-intro{
+  text-align:center;margin-bottom:24px;
+  font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:#8a7a5a;
+}
+#deck-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(52px,1fr));
+  gap:6px;padding:18px;
+  background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:14px;
+  max-height:380px;overflow-y:auto;margin-bottom:20px;
+}
+.dc{
+  height:76px;border-radius:7px;cursor:pointer;position:relative;
+  background:linear-gradient(160deg,#1e1535,#0e0b1e);
+  border:1px solid rgba(184,144,42,.25);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;overflow:hidden;
+}
+.dc::before{
+  content:'✦';font-size:.9rem;color:rgba(184,144,42,.3);
+  position:absolute;
+}
+.dc:hover:not(.picked){
+  border-color:var(--gold);transform:translateY(-4px) scale(1.06);
+  box-shadow:0 8px 20px rgba(184,144,42,.2);
+}
+.dc::after{
+  content:'';position:absolute;inset:0;border-radius:7px;
+  background:repeating-linear-gradient(45deg,rgba(184,144,42,.03) 0,rgba(184,144,42,.03) 2px,transparent 2px,transparent 8px);
+}
+.dc.picked{opacity:.25;cursor:default;transform:none!important}
+.dc.highlighted{border-color:var(--gold3);box-shadow:0 0 12px rgba(212,168,67,.5)}
+
+/* ── SELECTED SLOTS ── */
+.slots-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.slot{
+  flex:1;min-width:140px;max-width:200px;
+  background:rgba(0,0,0,.3);border:1px dashed rgba(184,144,42,.25);
+  border-radius:12px;padding:14px;text-align:center;
+  transition:border-color .3s;
+}
+.slot.filled{border-color:var(--gold);border-style:solid}
+.slot-pos{
+  font-family:'Cinzel Decorative',cursive;font-size:.65rem;letter-spacing:.1em;
+  color:var(--gold);margin-bottom:10px;
+}
+.slot-img-wrap{
+  position:relative;border-radius:8px;overflow:hidden;
+  border:2px solid rgba(184,144,42,.4);margin:0 auto 8px;
+  max-width:100px;
+}
+.slot-img-wrap img{width:100%;display:block;transition:transform .3s}
+.slot-img-wrap.rev img{transform:rotate(180deg)}
+.slot-name{font-size:.78rem;color:var(--vellum);margin-bottom:3px}
+.slot-orient{font-size:.7rem;color:#8a7a5a}
+
+/* ── CARD FLIP MODAL ── */
+.card-modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(6px);animation:fadeIn .2s ease;
+}
+.card-modal{
+  background:linear-gradient(160deg,#1e1a30,#0f0d1e);
+  border:1px solid var(--border);border-radius:18px;
+  max-width:480px;width:100%;padding:28px;
+  box-shadow:0 0 80px rgba(184,144,42,.12);
+  max-height:92vh;overflow-y:auto;
+}
+.cm-img-wrap{
+  max-width:180px;margin:0 auto 16px;
+  border-radius:10px;overflow:hidden;
+  border:2px solid var(--gold);
+  box-shadow:0 0 30px rgba(184,144,42,.2);
+}
+.cm-img-wrap.rev img{transform:rotate(180deg)}
+.cm-img-wrap img{width:100%;display:block}
+.cm-name{font-family:'Cinzel Decorative',cursive;font-size:1rem;color:var(--gold2);text-align:center;margin-bottom:4px}
+.cm-orient{text-align:center;font-size:.8rem;color:#8a7a5a;margin-bottom:12px}
+.cm-desc{
+  font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;
+  color:#b0a080;text-align:center;margin-bottom:18px;line-height:1.6;
+  padding-bottom:16px;border-bottom:1px solid rgba(184,144,42,.2);
+}
+.meaning-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.mg-cell{background:rgba(255,255,255,.04);border-radius:8px;padding:12px}
+.mg-cell .m-ico{font-size:1.1rem;margin-bottom:5px;display:block}
+.mg-cell .m-lbl{font-size:.7rem;color:var(--gold);letter-spacing:.05em;margin-bottom:4px;display:block}
+.mg-cell .m-val{font-size:.82rem;color:#c8b888;line-height:1.5}
+.cm-close{
+  display:block;width:100%;padding:10px;margin-top:6px;
+  border:1px solid rgba(184,144,42,.3);background:transparent;
+  color:#8a7a5a;border-radius:8px;cursor:pointer;
+  font-family:'Sarabun',sans-serif;font-size:.85rem;transition:all .25s;
+}
+.cm-close:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ══════════════════════════════
+   HISTORY
+══════════════════════════════ */
+.hist-list{display:flex;flex-direction:column;gap:10px}
+.hist-item{
+  background:rgba(26,21,40,.7);border:1px solid var(--border);border-radius:12px;
+  padding:16px;cursor:pointer;transition:all .25s;
+}
+.hist-item:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 24px rgba(184,144,42,.1)}
+.hist-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.hist-date{font-size:.78rem;color:#6a5e48}
+.badge{font-size:.72rem;padding:3px 10px;border-radius:20px}
+.badge.pending{background:rgba(184,144,42,.12);color:var(--gold)}
+.badge.answered{background:rgba(50,120,70,.15);color:#6dba8a}
+.badge.read{background:rgba(80,60,130,.2);color:#9a7fd4}
+.hist-q{font-size:.9rem;color:var(--vellum);margin-bottom:8px;font-style:italic}
+.chip-row{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:.7rem;padding:2px 9px;border-radius:14px;background:rgba(184,144,42,.1);border:1px solid rgba(184,144,42,.25);color:#b0a060}
+.chip.rev{background:rgba(139,26,26,.12);border-color:rgba(139,26,26,.3);color:#c08080}
+
+/* ══════════════════════════════
+   READING DETAIL MODAL
+══════════════════════════════ */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:400;
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:20px;overflow-y:auto;backdrop-filter:blur(5px);animation:fadeIn .25s ease;
+}
+.modal{
+  background:linear-gradient(160deg,#1c1830,#0e0c1c);
+  border:1px solid var(--border);border-radius:20px;
+  width:100%;max-width:820px;padding:32px;
+  position:relative;margin:auto;
+}
+.modal-x{
+  position:absolute;top:14px;right:14px;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  color:#6a5e48;width:30px;height:30px;border-radius:50%;
+  cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.modal-x:hover{color:var(--gold);border-color:var(--gold)}
+.modal-title{font-family:'Cinzel Decorative',cursive;font-size:1.15rem;color:var(--gold2);margin-bottom:20px}
+.meta-box{background:rgba(0,0,0,.25);border-radius:10px;padding:16px;margin-bottom:22px}
+.meta-box p{font-size:.87rem;color:#c8b888;margin-bottom:5px}
+.meta-box p:last-child{margin:0}
+.meta-box strong{color:var(--gold2)}
+
+.spread-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:22px}
+.spread-card{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:13px;padding:18px;
+}
+.sp-pos{font-family:'Cinzel Decorative',cursive;font-size:.6rem;color:var(--gold);letter-spacing:.1em;text-align:center;margin-bottom:10px}
+.sp-img{max-width:120px;margin:0 auto 10px;border-radius:8px;overflow:hidden;border:2px solid rgba(184,144,42,.35)}
+.sp-img.rev img{transform:rotate(180deg)}
+.sp-img img{width:100%;display:block}
+.sp-cname{font-family:'Cinzel Decorative',cursive;font-size:.7rem;color:var(--gold2);text-align:center;margin-bottom:3px}
+.sp-orient{text-align:center;font-size:.72rem;color:#8a7a5a;margin-bottom:10px}
+.sp-desc{font-size:.78rem;color:#9a8a6a;font-style:italic;margin-bottom:10px;line-height:1.5;text-align:center}
+.sp-divider{border:none;border-top:1px solid rgba(184,144,42,.15);margin:10px 0}
+.sp-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px}
+.sp-ico{font-size:.9rem;flex-shrink:0;margin-top:1px}
+.sp-row strong{font-size:.72rem;color:var(--gold);display:block;margin-bottom:1px}
+.sp-row span{font-size:.78rem;color:#b0a080;line-height:1.45}
+
+.pred-box{
+  background:linear-gradient(135deg,rgba(45,74,62,.15),rgba(20,16,40,.2));
+  border:1px solid rgba(45,74,62,.4);border-radius:13px;padding:22px;margin-bottom:18px;
+}
+.pred-box h3{font-family:'Cinzel Decorative',cursive;font-size:.9rem;color:#6dba8a;margin-bottom:14px}
+.pred-text{color:var(--vellum);font-size:.92rem;line-height:1.85;white-space:pre-line}
+
+.wait-box{text-align:center;padding:30px}
+.wait-box .wi{font-size:2.5rem;animation:pulse 2.5s ease-in-out infinite;display:block;margin-bottom:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.wait-box p{color:#8a7a5a;font-size:.9rem}
+
+.rate-block{margin-top:18px}
+.rate-block h3{font-family:'Cinzel Decorative',cursive;font-size:.85rem;color:var(--gold);margin-bottom:12px}
+.stars-row{display:flex;gap:6px;margin-bottom:14px}
+.star-btn{font-size:1.8rem;cursor:pointer;color:var(--gold);transition:transform .15s;background:none;border:none;padding:0}
+.star-btn:hover{transform:scale(1.25)}
+.star-btn.lit{color:var(--gold3)}
+
+.donate-box{
+  margin-top:22px;text-align:center;
+  background:rgba(184,144,42,.04);border:1px solid rgba(184,144,42,.18);
+  border-radius:14px;padding:22px;
+}
+.donate-box h4{font-family:'Cinzel Decorative',cursive;font-size:.8rem;color:var(--gold);margin-bottom:6px}
+.donate-box p{font-size:.82rem;color:#8a7a5a;margin-bottom:14px}
+.qr-wrap img{max-width:200px;border-radius:10px;border:2px solid var(--gold)}
+.qr-fallback{
+  display:inline-block;background:rgba(184,144,42,.08);border:1px solid var(--border);
+  border-radius:10px;padding:16px 24px;
+}
+.qr-fallback p{color:var(--gold2);font-size:.85rem;margin-bottom:4px}
+.qr-fallback small{color:#8a7a5a;font-size:.75rem}
+
+/* ══════════════════════════════
+   REVIEWS
+══════════════════════════════ */
+.rev-form{background:rgba(26,21,40,.7);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px}
+.rev-form h3{font-family:'Cinzel Decorative',cursive;font-size:.85rem;color:var(--gold);margin-bottom:14px}
+.anon-line{font-size:.85rem;color:#8a7a5a;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.star-pick{display:flex;align-items:center;gap:8px;margin:10px 0 14px}
+.star-pick span{font-size:.82rem;color:#8a7a5a}
+.sp-star{font-size:1.6rem;cursor:pointer;color:var(--gold);background:none;border:none;padding:0;transition:transform .15s}
+.sp-star:hover{transform:scale(1.2)}
+.sp-star.lit{color:var(--gold3)}
+
+.rev-card{background:rgba(26,21,40,.7);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.rev-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.rev-name{color:var(--gold2);font-size:.85rem;font-weight:600}
+.rev-stars{color:var(--gold);font-size:.95rem;letter-spacing:1px}
+.rev-text{color:#c8b888;font-size:.87rem;line-height:1.65;margin-bottom:5px;font-style:italic}
+.rev-date{font-size:.75rem;color:#5a5040}
+
+/* ══════════════════════════════
+   HOST DASHBOARD
+══════════════════════════════ */
+.host-reading{
+  background:rgba(20,16,30,.8);border:1px solid var(--border);
+  border-radius:15px;padding:22px;margin-bottom:14px;
+}
+.hr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.hr-name{font-size:.95rem;color:var(--gold2);font-weight:600}
+.hr-email{font-size:.78rem;color:#6a5e48;display:block}
+.hr-date{font-size:.75rem;color:#5a5040}
+.hr-dob{font-size:.8rem;color:#8a7a5a;margin-bottom:8px}
+.hr-q{
+  font-style:italic;color:var(--vellum);font-size:.9rem;
+  padding:10px 14px;background:rgba(0,0,0,.25);
+  border-left:3px solid var(--gold);border-radius:4px;margin-bottom:14px;
+}
+.hr-cards{display:flex;gap:12px;overflow-x:auto;padding:4px 0 12px}
+.hr-card{flex-shrink:0;width:100px;text-align:center}
+.hr-card-pos{font-size:.65rem;color:var(--gold);font-family:'Cinzel Decorative',cursive;margin-bottom:5px}
+.hr-card-img{border-radius:6px;overflow:hidden;border:1px solid rgba(184,144,42,.3)}
+.hr-card-img.rev img{transform:rotate(180deg)}
+.hr-card-img img{width:100%;display:block}
+.hr-card-name{font-size:.7rem;color:#c8b888;margin-top:4px}
+.hr-card-orient{font-size:.66rem;color:#6a5e48}
+.compose-area{border-top:1px solid rgba(184,144,42,.15);padding-top:16px;margin-top:4px}
+.compose-area .lbl{margin-top:0}
+.ans-box{background:rgba(50,80,60,.08);border:1px solid rgba(50,120,70,.2);border-radius:10px;padding:14px;margin-top:10px}
+.ans-box strong{font-size:.78rem;color:#6dba8a;display:block;margin-bottom:6px}
+.ans-box p{font-size:.85rem;color:#c8b888;white-space:pre-line;line-height:1.7}
+.fb-row{margin-top:8px;font-size:.78rem;color:#8a7a5a}
+.fb-stars{color:var(--gold)}
+.comment-q{font-style:italic;color:#b0a060}
+
+/* ══════════════════════════════
+   SENT CONFIRM
+══════════════════════════════ */
+.sent-wrap{text-align:center;padding:60px 20px}
+.sent-wrap .big{font-size:4rem;margin-bottom:16px;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.sent-wrap h2{font-family:'Cinzel Decorative',cursive;font-size:1.2rem;color:var(--gold2);margin-bottom:10px}
+.sent-wrap p{color:#8a7a5a;font-size:.9rem}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:rgba(0,0,0,.2)}
+::-webkit-scrollbar-thumb{background:rgba(184,144,42,.3);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(184,144,42,.5)}
+
+.loading-msg{text-align:center;color:#6a5e48;padding:40px;font-size:.9rem}
+.empty-msg{text-align:center;color:#6a5e48;padding:40px;font-size:.9rem;font-style:italic}
+
+@media(max-width:600px){
+  .auth-box{padding:32px 20px}
+  .modal{padding:20px}
+  .spread-row{grid-template-columns:1fr}
+  .meaning-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="parchment-bg"></div>
+<div id="root"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// ⚙️  CONFIG — ใส่ URL จาก Google Apps Script ตรงนี้
+// ══════════════════════════════════════════════════════
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzkJeueO3uz3liRSkE0L3WiXPc050adh5ErcjTfA0LNf5FUHEzJuK_lMRiFQCKS5TPE/exec";
+const HOST_EMAIL = "maimongkolzoror@gmail.com";
+
+// ══════════════════════════════════════════════════════
+// ไพ่ทาโรต์ 78 ใบ (Major 22 + Minor 56)
+// ══════════════════════════════════════════════════════
+const SUITS = [
+  { key:"wands",  nameTH:"ไม้กายสิทธิ์", element:"ไฟ — ความหลงใหล พลัง ความคิดสร้างสรรค์" },
+  { key:"cups",   nameTH:"ถ้วย",          element:"น้ำ — ความรู้สึก ความฝัน ความสัมพันธ์" },
+  { key:"swords", nameTH:"ดาบ",           element:"ลม — สติปัญญา ความขัดแย้ง ความจริง" },
+  { key:"pentacles",nameTH:"เพนทาเคิล",  element:"ดิน — วัตถุ การเงิน ความมั่นคง" },
+];
+const COURT = [
+  { rank:"Page",   rankTH:"เพจ",   up:"ข่าวดี การเริ่มต้น ความกระตือรือร้น", rev:"ความล่าช้า ข่าวไม่ดี" },
+  { rank:"Knight", rankTH:"อัศวิน",up:"ความรวดเร็ว ความกล้าหาญ การเคลื่อนไหว", rev:"ความหุนหันพลันแล่น" },
+  { rank:"Queen",  rankTH:"ราชินี",up:"ความเมตตา ความใจกว้าง ความเข้าใจ", rev:"การควบคุม ความเห็นแก่ตัว" },
+  { rank:"King",   rankTH:"กษัตริย์",up:"ผู้นำ ความเข้มแข็ง การตัดสินใจ", rev:"ความเผด็จการ การขาดความรับผิดชอบ" },
+];
+const PIPS = [
+  { n:1,  th:"เอซ",  up:"การเริ่มต้นใหม่ พลังงานบริสุทธิ์ โอกาส",           rev:"ความล่าช้า โอกาสที่หลุดพ้น" },
+  { n:2,  th:"สอง",  up:"ความสมดุล ทางเลือก ความร่วมมือ",                    rev:"ความไม่สมดุล การเลือกที่ยาก" },
+  { n:3,  th:"สาม",  up:"การเติบโต ความสำเร็จเบื้องต้น การสร้างสรรค์",       rev:"ความล่าช้า ความสับสน" },
+  { n:4,  th:"สี่",  up:"ความมั่นคง การพักฟื้น ความสงบ",                    rev:"ความไม่นิ่ง การเปลี่ยนแปลง" },
+  { n:5,  th:"ห้า",  up:"ความขัดแย้ง ความท้าทาย บทเรียน",                   rev:"การยุติความขัดแย้ง การปรองดอง" },
+  { n:6,  th:"หก",  up:"ความกลมกลืน ความสำเร็จ ความใจดี",                   rev:"การพึ่งพา ความล่าช้า" },
+  { n:7,  th:"เจ็ด", up:"ความพยายาม การป้องกัน ทักษะ",                      rev:"ขาดความมั่นใจ การหลีกเลี่ยง" },
+  { n:8,  th:"แปด",  up:"ความก้าวหน้า ทักษะ การเคลื่อนไหวเร็ว",            rev:"ความล่าช้า ความชะลอ" },
+  { n:9,  th:"เก้า", up:"การเตรียมพร้อม ความอดทน ใกล้สำเร็จ",               rev:"ความสิ้นหวัง ความอ่อนล้า" },
+  { n:10, th:"สิบ",  up:"ความสมบูรณ์ ภาระ จุดสิ้นสุดก่อนเริ่มใหม่",         rev:"การปลดปล่อยภาระ การสูญเสีย" },
+];
+
+// ความหมายเฉพาะตามธาตุ × ด้านชีวิต
+function minorMeaning(suit, upright) {
+  const tbl = {
+    wands:{
+      love:   upright?"ความรักที่เร่าร้อน มีพลัง":"ความสัมพันธ์ที่ร้อนรน",
+      work:   upright?"โปรเจกต์ใหม่ ความคิดสร้างสรรค์":"ไฟที่ดับลง ขาดแรงจูงใจ",
+      money:  upright?"โอกาสลงทุน ความกล้าเสี่ยง":"การสูญเสียจากความประมาท",
+      family: upright?"บรรยากาศสดใส ความสนุกสนาน":"ความขัดแย้งในบ้าน",
+    },
+    cups:{
+      love:   upright?"ความรักลึกซึ้ง อารมณ์อ่อนโยน":"อารมณ์ท่วมท้น ความไม่มั่นคง",
+      work:   upright?"งานสร้างสรรค์ ความพึงพอใจ":"ขาดแรงบันดาลใจ",
+      money:  upright?"รายรับจากสิ่งที่รัก":"ใช้จ่ายตามอารมณ์",
+      family: upright?"ความรักความเข้าใจ":"ความเปราะบางในครอบครัว",
+    },
+    swords:{
+      love:   upright?"ความสัมพันธ์ที่ต้องสื่อสารตรงๆ":"ความขัดแย้งและการพูดจาทิ่มแทง",
+      work:   upright?"การตัดสินใจชัดเจน ใช้ปัญญา":"ความขัดแย้งในที่ทำงาน",
+      money:  upright?"ต้องวิเคราะห์รอบคอบ":"การสูญเสียจากการตัดสินใจผิด",
+      family: upright?"ต้องพูดความจริง":"ความบาดหมางจากคำพูด",
+    },
+    pentacles:{
+      love:   upright?"ความสัมพันธ์มั่นคง ยั่งยืน":"ขาดความอบอุ่น มุ่งวัตถุนิยม",
+      work:   upright?"ความก้าวหน้ามั่นคง ผลตอบแทนดี":"งานที่ชะงัก การสูญเสีย",
+      money:  upright?"การเงินมั่นคง ออมทรัพย์ดี":"การสูญเสียทรัพย์สิน",
+      family: upright?"ครอบครัวอบอุ่น มั่นคง":"ปัญหาการเงินในครอบครัว",
+    },
+  };
+  return tbl[suit] || {love:"—",work:"—",money:"—",family:"—"};
+}
+
+// สร้างไพ่ Major Arcana 22 ใบ
+const MAJOR = [
+  { id:"M00", name:"The Fool",         nameTH:"คนโง่เขลา",
+    img:"https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg",
+    desc:"หนุ่มสาวก้าวออกสู่โลกกว้างด้วยใจโปร่งเบา มีเพียงห่อสัมภาระน้อยนิด",
+    upright:{general:"การเริ่มต้นใหม่ ความอิสระ การผจญภัย",love:"ความรักใหม่ที่ตื่นเต้นและไม่ผูกมัด",work:"โอกาสใหม่ที่ไม่คาดฝัน",money:"อาจเสี่ยงแต่มีโอกาสดี",family:"บรรยากาศสดใส ความสัมพันธ์แบบใหม่"},
+    reversed:{general:"ความประมาท การตัดสินใจผิดพลาด",love:"ความสัมพันธ์ที่ไม่มั่นคง",work:"ขาดความรับผิดชอบ",money:"ใช้จ่ายสุรุ่ยสุร่าย",family:"ความขัดแย้งจากการขาดความรับผิดชอบ"}},
+  { id:"M01", name:"The Magician",     nameTH:"นักมายากล",
+    img:"https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg",
+    desc:"นักมายากลยืนหน้าโต๊ะพร้อมสัญลักษณ์สี่ธาตุ มีพลังสร้างสรรค์สูงสุด",
+    upright:{general:"ทักษะ ความสามารถ การสร้างสรรค์",love:"มีเสน่ห์ดึงดูด ความสัมพันธ์ลึกซึ้ง",work:"ความสำเร็จจากฝีมือตัวเอง",money:"โอกาสทางธุรกิจดีเยี่ยม",family:"เป็นผู้นำในครอบครัว"},
+    reversed:{general:"การหลอกลวง การใช้พลังงานผิดทาง",love:"คนรักไม่ซื่อสัตย์",work:"ใช้อำนาจในทางมิชอบ",money:"ระวังการฉ้อโกง",family:"ความขัดแย้งจากการควบคุม"}},
+  { id:"M02", name:"The High Priestess",nameTH:"นักบวชหญิง",
+    img:"https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg",
+    desc:"นักบวชหญิงนั่งระหว่างเสาสองต้น ถือคัมภีร์แห่งปัญญา",
+    upright:{general:"สัญชาตญาณ ความลึกลับ ปัญญาภายใน",love:"ความรักที่ลึกซึ้งซับซ้อน รู้สึกได้มากกว่าพูดได้",work:"เชื่อสัญชาตญาณในการทำงาน",money:"อย่าเปิดเผยแผนการเงิน",family:"ความลับในครอบครัวที่ต้องเก็บงำ"},
+    reversed:{general:"ความลับถูกเปิดเผย ความสับสน",love:"ขาดความไว้วางใจ",work:"ข้อมูลถูกปิดบัง",money:"การลงทุนที่ไม่โปร่งใส",family:"ความเข้าใจผิดสะสม"}},
+  { id:"M03", name:"The Empress",      nameTH:"จักรพรรดินี",
+    img:"https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg",
+    desc:"นางพญาแห่งธรรมชาติ นั่งบนบัลลังก์ท่ามกลางความอุดมสมบูรณ์",
+    upright:{general:"ความอุดมสมบูรณ์ ความสร้างสรรค์ ความเป็นแม่",love:"ความรักที่หล่อเลี้ยง การตั้งครรภ์ที่เป็นไปได้",work:"โปรเจกต์สร้างสรรค์ประสบความสำเร็จ",money:"ความมั่งคั่ง รายได้งดงาม",family:"ความสุขในครอบครัว บุตรหลาน"},
+    reversed:{general:"การพึ่งพา ความหึงหวง",love:"ความสัมพันธ์ขาดสมดุล",work:"ความคิดสร้างสรรค์ถูกขัดขวาง",money:"ใช้จ่ายฟุ่มเฟือย",family:"ความขัดแย้งแม่ลูก"}},
+  { id:"M04", name:"The Emperor",      nameTH:"จักรพรรดิ",
+    img:"https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg",
+    desc:"จักรพรรดิผู้ทรงอำนาจนั่งบนบัลลังก์หินแกรนิต สัญลักษณ์แห่งระเบียบ",
+    upright:{general:"อำนาจ ความมั่นคง การควบคุม ระเบียบ",love:"ความสัมพันธ์มั่นคงจริงจัง",work:"ผู้นำเข้มแข็ง ความก้าวหน้าในอาชีพ",money:"ความมั่นคงทางการเงิน",family:"พ่อผู้เข้มแข็ง โครงสร้างชัดเจน"},
+    reversed:{general:"เผด็จการ การควบคุมมากเกินไป",love:"ความสัมพันธ์ที่กดขี่",work:"หัวหน้าที่เอาแต่ใจ",money:"สูญเสียอำนาจทางการเงิน",family:"ความแข็งกร้าวในครอบครัว"}},
+  { id:"M05", name:"The Hierophant",   nameTH:"นักบวชชาย",
+    img:"https://upload.wikimedia.org/wikipedia/commons/8/8d/RWS_Tarot_05_Hierophant.jpg",
+    desc:"นักบวชชั้นสูงนั่งบนบัลลังก์ ถ่ายทอดความรู้อันศักดิ์สิทธิ์",
+    upright:{general:"ประเพณี ความเชื่อ สถาบัน การเรียนรู้",love:"การแต่งงาน ความสัมพันธ์แบบดั้งเดิม",work:"ทำตามกฎระเบียบ ได้รับการยอมรับ",money:"ลงทุนแบบอนุรักษ์นิยม",family:"เคารพผู้ใหญ่ ประเพณีครอบครัว"},
+    reversed:{general:"ท้าทายประเพณี ความคิดนอกกรอบ",love:"ความสัมพันธ์แปลกใหม่นอกรีต",work:"ทำลายกฎเพื่อเปลี่ยนแปลง",money:"การเงินนอกระบบ",family:"ขัดแย้งกับค่านิยมเดิม"}},
+  { id:"M06", name:"The Lovers",       nameTH:"คู่รัก",
+    img:"https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_06_Lovers.jpg",
+    desc:"ชายหญิงในสวนอีเดน ทูตสวรรค์เบื้องบนอวยพรความรัก",
+    upright:{general:"ความรัก การตัดสินใจ ความสอดคล้อง",love:"ความรักแท้จริง ความเชื่อมโยงลึกซึ้ง",work:"การเลือกสำคัญในอาชีพ",money:"ตัดสินใจการเงินอย่างรอบคอบ",family:"ความกลมเกลียวในครอบครัว"},
+    reversed:{general:"ความไม่สอดคล้อง การแยกทาง",love:"ความสัมพันธ์มีปัญหา",work:"ความขัดแย้งในที่ทำงาน",money:"การเงินไม่สอดคล้อง",family:"ความขัดแย้งในครอบครัว"}},
+  { id:"M07", name:"The Chariot",      nameTH:"รถศึก",
+    img:"https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg",
+    desc:"นักรบขับรถศึก ควบคุมสฟิงซ์ขาว-ดำ สัญลักษณ์แห่งชัยชนะ",
+    upright:{general:"ชัยชนะ การควบคุม ความมุ่งมั่น ความสำเร็จ",love:"ความรักที่ต้องสู้เพื่อให้ได้มา",work:"สำเร็จจากความมุ่งมั่น",money:"การเงินดีหลังผ่านอุปสรรค",family:"ชนะอุปสรรคในครอบครัว"},
+    reversed:{general:"ขาดการควบคุม ความพ่ายแพ้",love:"ความสัมพันธ์วุ่นวาย",work:"โปรเจกต์ล้มเหลว",money:"การสูญเสียทางการเงิน",family:"ความขัดแย้งที่ควบคุมไม่ได้"}},
+  { id:"M08", name:"Strength",         nameTH:"ความเข้มแข็ง",
+    img:"https://upload.wikimedia.org/wikipedia/commons/f/f6/RWS_Tarot_08_Strength.jpg",
+    desc:"หญิงสาวโอบกอดสิงโตอย่างอ่อนโยน พลังแท้อยู่ที่จิตใจ ไม่ใช่กายภาพ",
+    upright:{general:"ความแข็งแกร่ง ความกล้าหาญ ความอดทน ความเมตตา",love:"ความรักเข้มแข็งยั่งยืน",work:"ชนะอุปสรรคด้วยความอดทน",money:"มั่นคงผ่านความพยายาม",family:"รักและอดทนในครอบครัว"},
+    reversed:{general:"ขาดความมั่นใจ ความอ่อนแอภายใน",love:"ความสัมพันธ์ขาดแรง",work:"ท้อแท้ไม่สู้",money:"ขาดความมั่นคง",family:"รับมือปัญหาไม่ไหว"}},
+  { id:"M09", name:"The Hermit",       nameTH:"ฤาษี",
+    img:"https://upload.wikimedia.org/wikipedia/commons/4/4d/RWS_Tarot_09_Hermit.jpg",
+    desc:"ฤาษีชราถือตะเกียงบนยอดเขา มองหาความจริงในความสงบ",
+    upright:{general:"การค้นหาตัวเอง ความโดดเดี่ยว ปัญญาภายใน การชี้นำ",love:"ต้องการเวลาส่วนตัวก่อนตัดสินใจ",work:"ทำงานคนเดียว งานวิจัย",money:"ประหยัดรอบคอบ",family:"ต้องการพื้นที่ส่วนตัว"},
+    reversed:{general:"แยกตัวมากเกินไป ความเหงา",love:"โดดเดี่ยวในความสัมพันธ์",work:"ขาดการทำงานเป็นทีม",money:"ขาดแผน",family:"ห่างเหินจากครอบครัว"}},
+  { id:"M10", name:"Wheel of Fortune", nameTH:"วงล้อโชคชะตา",
+    img:"https://upload.wikimedia.org/wikipedia/commons/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg",
+    desc:"วงล้อหมุนไม่หยุด สัตว์ศักดิ์สิทธิ์สี่ทิศล้อมรอบ",
+    upright:{general:"การเปลี่ยนแปลง โชคชะตา โอกาส วงจรชีวิต",love:"โชคดีด้านความรัก",work:"โอกาสทองในอาชีพ",money:"โชคลาภจากที่ไม่คาดคิด",family:"การเปลี่ยนแปลงในทางดี"},
+    reversed:{general:"โชคร้าย ต้านทานการเปลี่ยนแปลง",love:"ความสัมพันธ์โชคร้าย",work:"อาชีพตกต่ำ",money:"สูญเสียที่ไม่คาดคิด",family:"ช่วงเวลายากในครอบครัว"}},
+  { id:"M11", name:"Justice",          nameTH:"ความยุติธรรม",
+    img:"https://upload.wikimedia.org/wikipedia/commons/e/e0/RWS_Tarot_11_Justice.jpg",
+    desc:"หญิงสาวถือดาบและตาชั่ง ความยุติธรรมที่ปราศจากอคติ",
+    upright:{general:"ความยุติธรรม ความสมดุล ความซื่อสัตย์ กฎหมาย",love:"ความสัมพันธ์เท่าเทียม",work:"ผลตอบแทนยุติธรรม",money:"การเงินสมดุล",family:"ความยุติธรรมในครอบครัว"},
+    reversed:{general:"ความอยุติธรรม ความไม่สมดุล",love:"ความสัมพันธ์ไม่เท่าเทียม",work:"การเลือกปฏิบัติ",money:"ระวังการฉ้อโกง",family:"ขัดแย้งที่ยังไม่ได้รับการแก้ไข"}},
+  { id:"M12", name:"The Hanged Man",   nameTH:"ชายถูกแขวน",
+    img:"https://upload.wikimedia.org/wikipedia/commons/2/2b/RWS_Tarot_12_Hanged_Man.jpg",
+    desc:"ชายห้อยหัวจากต้นไม้ด้วยความสมัครใจ รัศมีรอบศีรษะบ่งบอกการตรัสรู้",
+    upright:{general:"การรอคอย การสละ มุมมองใหม่ การพักชั่วคราว",love:"ต้องรอเวลาที่เหมาะสม",work:"หยุดพักทบทวนก่อน",money:"ต้องเสียสละบางส่วน",family:"มองปัญหาจากมุมใหม่"},
+    reversed:{general:"ติดอยู่กับที่ ความล่าช้า",love:"ความสัมพันธ์ไม่คืบหน้า",work:"อาชีพชะงัก",money:"การเงินชะงักงัน",family:"ปัญหาแก้ไม่ตก"}},
+  { id:"M13", name:"Death",            nameTH:"ความตาย",
+    img:"https://upload.wikimedia.org/wikipedia/commons/d/d7/RWS_Tarot_13_Death.jpg",
+    desc:"อัศวินโครงกระดูกขี่ม้าขาว การสิ้นสุดที่นำไปสู่การเริ่มต้นใหม่",
+    upright:{general:"การสิ้นสุด การเปลี่ยนแปลง การเริ่มต้นใหม่ การปลดปล่อย",love:"สิ้นสุดบทหนึ่งเพื่อเริ่มบทใหม่",work:"ปิดฉากเก่าเปิดทางใหม่",money:"สูญเสียเพื่อลงทุนใหม่",family:"โครงสร้างครอบครัวเปลี่ยน"},
+    reversed:{general:"ต้านทานการเปลี่ยนแปลง ยึดติด",love:"ยึดติดกับอดีต",work:"ปฏิเสธการเปลี่ยนแปลง",money:"กลัวลงทุนใหม่",family:"ขัดแย้งจากการยึดติด"}},
+  { id:"M14", name:"Temperance",       nameTH:"ความพอดี",
+    img:"https://upload.wikimedia.org/wikipedia/commons/f/f8/RWS_Tarot_14_Temperance.jpg",
+    desc:"ทูตสวรรค์เทน้ำระหว่างถ้วยสองใบ ความกลมกลืนที่สมบูรณ์แบบ",
+    upright:{general:"สมดุล ความพอดี ความอดทน ความกลมกลืน",love:"ความสัมพันธ์สมดุลกลมกลืน",work:"ทำงานสมดุล",money:"การเงินสมดุล",family:"ความสามัคคีในครอบครัว"},
+    reversed:{general:"ขาดสมดุล ความสุดโต่ง",love:"ความสัมพันธ์ไม่สมดุล",work:"ทำงานหนักเกินไป",money:"ใช้จ่ายสุดโต่ง",family:"ความไม่ลงรอย"}},
+  { id:"M15", name:"The Devil",        nameTH:"ปีศาจ",
+    img:"https://upload.wikimedia.org/wikipedia/commons/5/55/RWS_Tarot_15_Devil.jpg",
+    desc:"ปีศาจนั่งบนบัลลังก์ ชายหญิงถูกล่ามโซ่แต่โซ่นั้นหลวม",
+    upright:{general:"การติดกับ ความโลภ ความหลงติด",love:"ความสัมพันธ์เป็นพิษ การหมกมุ่น",work:"ติดกับในงานที่ไม่ชอบ",money:"หนี้สิน ความโลภ",family:"ความสัมพันธ์เป็นพิษในครอบครัว"},
+    reversed:{general:"การปลดปล่อย การตื่นรู้",love:"หลุดพ้นจากความสัมพันธ์เป็นพิษ",work:"ออกจากงานที่ไม่ดี",money:"ชำระหนี้ได้",family:"รักษาความสัมพันธ์ที่ไม่ดี"}},
+  { id:"M16", name:"The Tower",        nameTH:"หอคอย",
+    img:"https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg",
+    desc:"ฟ้าผ่าถล่มหอคอย ผู้คนตกลงมา ความจริงที่ซ่อนอยู่ถูกเปิดเผย",
+    upright:{general:"ความหายนะ การเปลี่ยนแปลงฉับพลัน การตื่นรู้ที่ช็อค",love:"การแยกทางกะทันหัน",work:"สูญเสียงานหรือตำแหน่ง",money:"สูญเสียการเงินกะทันหัน",family:"ความวุ่นวายในครอบครัว"},
+    reversed:{general:"หลีกเลี่ยงหายนะ เปลี่ยนแปลงช้าๆ",love:"ความสัมพันธ์กำลังจะแตกหัก",work:"ปัญหาค่อยๆ สะสม",money:"ความเสี่ยงยังควบคุมได้",family:"ความตึงเครียดสะสม"}},
+  { id:"M17", name:"The Star",         nameTH:"ดาวแห่งความหวัง",
+    img:"https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_17_Star.jpg",
+    desc:"หญิงสาวเทน้ำสู่แผ่นดินใต้ดาวสว่าง ความหวังหลังพายุ",
+    upright:{general:"ความหวัง แรงบันดาลใจ ความเยียวยา ความเชื่อมั่น",love:"ความรักใหม่งดงาม",work:"แสงสว่างหลังความมืด",money:"การเงินฟื้นตัว",family:"ความหวังในครอบครัว"},
+    reversed:{general:"ความสิ้นหวัง ความท้อแท้",love:"ความรักดับสลาย",work:"สูญเสียแรงบันดาลใจ",money:"การเงินยังไม่ฟื้น",family:"ขาดความหวัง"}},
+  { id:"M18", name:"The Moon",         nameTH:"ดวงจันทร์",
+    img:"https://upload.wikimedia.org/wikipedia/commons/7/7f/RWS_Tarot_18_Moon.jpg",
+    desc:"ดวงจันทร์ส่องแสงเหนือสระน้ำ สุนัขและหมาป่าเห่า ภาพลวงตาของความกลัว",
+    upright:{general:"ความลึกลับ ความกังวล ภาพลวงตา ความไม่ชัดเจน",love:"ความสัมพันธ์ไม่ชัดเจน",work:"ความไม่แน่นอนในอาชีพ",money:"การเงินไม่ชัดเจน",family:"ความลึกลับในครอบครัว"},
+    reversed:{general:"ความชัดเจน การปลดปล่อยความกลัว",love:"ความชัดเจนในความสัมพันธ์",work:"เห็นแนวทางชัดขึ้น",money:"การเงินชัดเจนขึ้น",family:"แก้ความเข้าใจผิด"}},
+  { id:"M19", name:"The Sun",          nameTH:"ดวงอาทิตย์",
+    img:"https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg",
+    desc:"เด็กขี่ม้าขาวใต้ดวงอาทิตย์ ความสุขและความสำเร็จที่บริสุทธิ์",
+    upright:{general:"ความสุข ความสำเร็จ ชีวิตชีวา ความมั่นใจ",love:"ความรักมีความสุข",work:"ความสำเร็จอันสูงส่ง",money:"ความมั่งคั่ง",family:"ความสุขในครอบครัว"},
+    reversed:{general:"ความสุขถูกบดบัง ล้มเหลวชั่วคราว",love:"ความสุขขาดหาย",work:"ความสำเร็จล่าช้า",money:"ความมั่งคั่งยังมาไม่ถึง",family:"ความสุขขาดหายในครอบครัว"}},
+  { id:"M20", name:"Judgement",        nameTH:"การพิพากษา",
+    img:"https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg",
+    desc:"ทูตสวรรค์เป่าแตร ผู้คนลุกขึ้นจากหลุมศพ การตื่นรู้ครั้งใหญ่",
+    upright:{general:"การตื่นรู้ การตัดสิน การฟื้นคืน การเรียกร้องชีวิตใหม่",love:"การคืนดี",work:"การตัดสินใจครั้งสำคัญ",money:"ประเมินการเงินอีกครั้ง",family:"การคืนดีในครอบครัว"},
+    reversed:{general:"ไม่ยอมรับ การตัดสินใจผิด",love:"ปฏิเสธการคืนดี",work:"ตัดสินใจผิดพลาด",money:"ไม่ยอมรับความจริงทางการเงิน",family:"ปัญหาที่ไม่ได้รับการแก้ไข"}},
+  { id:"M21", name:"The World",        nameTH:"โลกทั้งใบ",
+    img:"https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg",
+    desc:"หญิงสาวเต้นรำในวงแหวนดอกไม้ สัตว์สี่ทิศล้อมรอบ ความสำเร็จสูงสุด",
+    upright:{general:"ความสมบูรณ์ ความสำเร็จ การสรุป การบรรลุเป้าหมาย",love:"ความสัมพันธ์สมบูรณ์แบบ",work:"ความสำเร็จสูงสุด",money:"ความมั่งคั่งสมบูรณ์",family:"ครอบครัวที่สมบูรณ์แบบ"},
+    reversed:{general:"ไม่สำเร็จ ยังไม่จบ",love:"ความสัมพันธ์ยังไม่สมบูรณ์",work:"โปรเจกต์ยังไม่เสร็จ",money:"การเงินยังไม่ถึงเป้า",family:"ปัญหาครอบครัวยังไม่แก้"}},
+];
+
+// สร้าง Minor Arcana 56 ใบ
+function buildMinorArcana() {
+  const cards = [];
+  SUITS.forEach(suit => {
+    PIPS.forEach(pip => {
+      const upMeaning  = minorMeaning(suit.key, true);
+      const revMeaning = minorMeaning(suit.key, false);
+      cards.push({
+        id: `${suit.key}_${pip.n}`,
+        name: `${pip.th}แห่ง${suit.nameTH}`,
+        nameTH: `${pip.th}แห่ง${suit.nameTH}`,
+        img: `https://sacred-texts.com/tarot/pkt/img/${suit.key}${String(pip.n).padStart(2,'0')}.jpg`,
+        desc: `${pip.th}แห่ง${suit.nameTH} · ${suit.element}`,
+        upright:  { general: pip.up,  love: upMeaning.love,  work: upMeaning.work,  money: upMeaning.money,  family: upMeaning.family },
+        reversed: { general: pip.rev, love: revMeaning.love, work: revMeaning.work, money: revMeaning.money, family: revMeaning.family },
+      });
+    });
+    COURT.forEach(c => {
+      const upMeaning  = minorMeaning(suit.key, true);
+      const revMeaning = minorMeaning(suit.key, false);
+      cards.push({
+        id: `${suit.key}_${c.rank}`,
+        name: `${c.rankTH}แห่ง${suit.nameTH}`,
+        nameTH: `${c.rankTH}แห่ง${suit.nameTH}`,
+        img: `https://sacred-texts.com/tarot/pkt/img/${suit.key}${c.rank.toLowerCase()}.jpg`,
+        desc: `${c.rankTH}แห่ง${suit.nameTH} · ${suit.element}`,
+        upright:  { general: c.up,  love: upMeaning.love,  work: upMeaning.work,  money: upMeaning.money,  family: upMeaning.family },
+        reversed: { general: c.rev, love: revMeaning.love, work: revMeaning.work, money: revMeaning.money, family: revMeaning.family },
+      });
+    });
+  });
+  return cards;
+}
+
+const ALL_CARDS = [...MAJOR, ...buildMinorArcana()]; // 78 ใบ
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let session = JSON.parse(localStorage.getItem("tarot_session") || "null");
+let deck = [], selectedCards = [], readingMeta = {};
+let currentRating = 0;
+
+function saveSession(u) { session = u; localStorage.setItem("tarot_session", JSON.stringify(u)); }
+function clearSession() { session = null; localStorage.removeItem("tarot_session"); }
+
+// ══════════════════════════════════════════════════════
+// API HELPERS
+// ══════════════════════════════════════════════════════
+async function api(params) {
+  const isGet = params.method === "GET";
+  let url = GAS_URL;
+  if (isGet) {
+    const q = new URLSearchParams(params);
+    delete q.method;
+    url += "?" + q.toString();
+    const r = await fetch(url);
+    return r.json();
+  }
+  const r = await fetch(GAS_URL, {
+    method:"POST",
+    body: JSON.stringify(params),
+  });
+  return r.json();
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════
+function render() {
+  if (!session) { renderAuth(); return; }
+  if (session.email === HOST_EMAIL) renderHost();
+  else renderUser();
+}
+
+// ── AUTH ────────────────────────────────────────────
+function renderAuth() {
+  document.getElementById("root").innerHTML = `
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="brand-mark">
+        <span class="brand-moon">☽</span>
+        <div class="brand-title">ดวงชะตา</div>
+        <div class="brand-sub">TAROT · RIDER WAITE · ORACLE</div>
+      </div>
+      <div class="tab-row">
+        <button class="tab on" onclick="switchTab('login')">เข้าสู่ระบบ</button>
+        <button class="tab" onclick="switchTab('reg')">สมัครสมาชิก</button>
+      </div>
+      <div id="login-f">
+        <input class="field" id="l-email" type="email" placeholder="อีเมล์">
+        <input class="field" id="l-pass" type="password" placeholder="รหัสผ่าน">
+        <button class="act-btn" onclick="doLogin()">✦ เข้าสู่ระบบ ✦</button>
+      </div>
+      <div id="reg-f" class="hidden">
+        <input class="field" id="r-name" type="text" placeholder="ชื่อ-นามสกุล">
+        <input class="field" id="r-email" type="email" placeholder="อีเมล์">
+        <input class="field" id="r-pass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)">
+        <button class="act-btn" onclick="doRegister()">✦ สมัครสมาชิก ✦</button>
+      </div>
+      <div class="err-msg" id="a-err"></div>
+    </div>
+  </div>`;
+}
+
+window.switchTab = t => {
+  document.querySelectorAll(".tab").forEach(b => b.classList.remove("on"));
+  document.querySelectorAll(".tab")[t==="login"?0:1].classList.add("on");
+  document.getElementById("login-f").classList.toggle("hidden", t!=="login");
+  document.getElementById("reg-f").classList.toggle("hidden", t!=="reg");
+};
+window.doLogin = async () => {
+  const email = document.getElementById("l-email").value.trim();
+  const password = document.getElementById("l-pass").value;
+  if (!email||!password) { setErr("กรุณากรอกให้ครบ"); return; }
+  setErr("กำลังเข้าสู่ระบบ...");
+  const r = await api({ action:"login", email, password });
+  if (r.error) { setErr(r.error); return; }
+  saveSession(r.user); render();
+};
+window.doRegister = async () => {
+  const displayName = document.getElementById("r-name").value.trim();
+  const email       = document.getElementById("r-email").value.trim();
+  const password    = document.getElementById("r-pass").value;
+  if (!displayName||!email||!password) { setErr("กรุณากรอกให้ครบ"); return; }
+  if (password.length < 6) { setErr("รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"); return; }
+  setErr("กำลังสมัคร...");
+  const r = await api({ action:"register", email, password, displayName });
+  if (r.error) { setErr(r.error); return; }
+  saveSession(r.user); render();
+};
+function setErr(m) { const el=document.getElementById("a-err"); if(el) el.textContent=m; }
+
+// ── USER APP ────────────────────────────────────────
+function renderUser() {
+  document.getElementById("root").innerHTML = `
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-logo">☽ ดวงชะตา</div>
+      <div class="topbar-right">
+        <span class="topbar-user">สวัสดี, ${session.displayName||"ผู้ใช้"}</span>
+        <button class="ghost-btn" onclick="doLogout()">ออก</button>
+      </div>
+    </header>
+    <nav class="navbar">
+      <button class="nav on" id="nav-read" onclick="showSec('read')">🔮 ดูดวง</button>
+      <button class="nav" id="nav-hist" onclick="showSec('hist')">📜 ประวัติ</button>
+      <button class="nav" id="nav-revs" onclick="showSec('revs')">⭐ รีวิว</button>
+    </nav>
+
+    <!-- READING -->
+    <div class="sec on" id="sec-read">
+      <div class="wrap">
+        <div class="sec-head"><h2>✦ ขอดูดวงไพ่ทาโรต์ ✦</h2><p>กรอกข้อมูลแล้วเลือกไพ่ที่ดึงดูดใจ</p></div>
+        <div id="form-area">
+          <div class="card-panel">
+            <label class="lbl">ชื่อ-นามสกุล</label>
+            <input class="field" id="f-name" value="${session.displayName||""}" placeholder="ชื่อของคุณ">
+            <label class="lbl">วันเดือนปีเกิด</label>
+            <input class="field" id="f-dob" type="date">
+            <label class="lbl">คำถามที่ต้องการถาม</label>
+            <textarea class="field" id="f-q" placeholder="เขียนคำถามที่อยู่ในใจ..."></textarea>
+            <button class="main-btn" onclick="startPick()">✨ เริ่มเลือกไพ่</button>
+          </div>
+        </div>
+        <div id="pick-area" class="hidden">
+          <div class="sec-head" style="margin-top:32px">
+            <h2>✦ เลือกไพ่ 3 ใบ ✦</h2>
+            <p>ผ่อนคลายจิตใจ แล้วเลือกไพ่ที่ดึงดูดใจคุณ · เหลืออีก <strong id="left-lbl">3</strong> ใบ</p>
+          </div>
+          <p class="deck-intro">สำรับมี 78 ใบ · คลิกไพ่เพื่อดูความหมาย · คลิก "เลือกใบนี้" เพื่อเพิ่มในสเปรด</p>
+          <div id="deck-grid"></div>
+          <div class="slots-row" id="slots-row">
+            ${["อดีต · รากเหง้า","ปัจจุบัน · แก่นกลาง","อนาคต · ผลลัพธ์"].map((p,i)=>`
+            <div class="slot" id="slot-${i}">
+              <div class="slot-pos">${p}</div>
+              <div style="color:#3a3028;font-size:.75rem;margin-top:20px">ยังไม่ได้เลือก</div>
+            </div>`).join("")}
+          </div>
+          <div id="submit-area" class="hidden" style="text-align:center;margin-top:20px">
+            <button class="main-btn" onclick="submitReading()">🌟 ส่งคำขอดูดวง</button>
+          </div>
+        </div>
+        <div id="sent-area" class="hidden">
+          <div class="sent-wrap">
+            <span class="big">🌙</span>
+            <h2>ส่งคำขอดูดวงสำเร็จ</h2>
+            <p>โหรกำลังพิจารณาไพ่ของคุณ จะแจ้งทางอีเมล์เมื่อคำทำนายพร้อม</p>
+            <button class="main-btn" style="margin-top:24px" onclick="showSec('hist')">ดูประวัติ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="sec" id="sec-hist">
+      <div class="wrap">
+        <div class="sec-head"><h2>✦ ประวัติการดูดวง ✦</h2></div>
+        <div id="hist-list" class="hist-list"><div class="loading-msg">กำลังโหลด...</div></div>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="sec" id="sec-revs">
+      <div class="wrap">
+        <div class="sec-head"><h2>✦ รีวิวจากผู้ใช้ ✦</h2></div>
+        <div class="rev-form">
+          <h3>แสดงความคิดเห็น</h3>
+          <label class="anon-line"><input type="checkbox" id="anon-chk"> แสดงเป็นนิรนาม</label>
+          <textarea class="field" id="rev-txt" placeholder="แชร์ประสบการณ์..." rows="3"></textarea>
+          <div class="star-pick">
+            <span>ให้คะแนน:</span>
+            ${[1,2,3,4,5].map(i=>`<button class="sp-star" data-v="${i}" onclick="setRevStar(${i})">☆</button>`).join("")}
+            <span id="rev-lbl" style="color:var(--gold2)"></span>
+          </div>
+          <button class="main-btn sm" onclick="submitReview()">ส่งรีวิว</button>
+        </div>
+        <div id="revs-list"><div class="loading-msg">กำลังโหลด...</div></div>
+      </div>
+    </div>
+  </div>`;
+
+  buildDeck();
+  loadHistory();
+  loadReviews();
+}
+
+window.showSec = s => {
+  document.querySelectorAll(".sec").forEach(e=>e.classList.remove("on"));
+  document.querySelectorAll(".nav").forEach(e=>e.classList.remove("on"));
+  document.getElementById("sec-"+s).classList.add("on");
+  document.getElementById("nav-"+s).classList.add("on");
+  if (s==="hist") loadHistory();
+  if (s==="revs") loadReviews();
+};
+window.doLogout = () => { clearSession(); render(); };
+
+// ── DECK ────────────────────────────────────────────
+function buildDeck() {
+  deck = ALL_CARDS.map(c => ({ ...c, reversed: Math.random() < 0.5 }))
+                  .sort(() => Math.random() - 0.5);
+  selectedCards = [];
+  renderDeckGrid();
+}
+
+function renderDeckGrid() {
+  const g = document.getElementById("deck-grid");
+  if (!g) return;
+  g.innerHTML = deck.map((c,i) => `
+    <div class="dc ${selectedCards.find(s=>s.id===c.id)?"picked":""}" 
+         title="${c.nameTH}" onclick="peekCard(${i})"></div>
+  `).join("");
+}
+
+window.peekCard = idx => {
+  const c = deck[idx];
+  const alreadyPicked = !!selectedCards.find(s => s.id === c.id);
+  const canPick = selectedCards.length < 3 && !alreadyPicked;
+  const m = c.reversed ? c.reversed_data || c.reversed : c.reversed;
+  const meaning = typeof m === "object" ? m : (c.reversed ? c.reversed : c.upright);
+  const data = c.reversed ? c.reversed : c.upright;
+  // ตรวจว่า reversed คือ object หรือ boolean
+  const uprightData = c.upright;
+  const revData     = c.reversed; // อาจเป็น boolean ในบางกรณี — แต่เราเก็บ reversed:bool แยก
+  // แก้ไข: เราเก็บ reversed:bool ใน deck item, ส่วน c.upright / c.reversed (object) มาจาก ALL_CARDS
+  const cardData = ALL_CARDS.find(x => x.id === c.id);
+  const orient = c.reversed; // boolean
+  const meaningData = orient ? cardData.reversed : cardData.upright;
+
+  document.body.insertAdjacentHTML("beforeend", `
+  <div class="card-modal-bg" id="peek-modal" onclick="if(event.target===this)closePeek()">
+    <div class="card-modal">
+      <div class="cm-img-wrap ${orient?"rev":""}">
+        <img src="${cardData.img}" alt="${cardData.nameTH}" 
+             onerror="this.parentElement.innerHTML='<div style=padding:20px;color:var(--gold);text-align:center;font-size:.8rem>${cardData.nameTH}</div>'">
+      </div>
+      <div class="cm-name">${cardData.nameTH}</div>
+      <div class="cm-orient">${orient?"🔄 กลับหัว — ความหมายกลับด้าน":"↑ ตั้ง — ความหมายปกติ"}</div>
+      <div class="cm-desc">${cardData.desc}</div>
+      <div class="meaning-grid">
+        <div class="mg-cell"><span class="m-ico">❤️</span><span class="m-lbl">ความรัก</span><div class="m-val">${meaningData.love}</div></div>
+        <div class="mg-cell"><span class="m-ico">💼</span><span class="m-lbl">การงาน</span><div class="m-val">${meaningData.work}</div></div>
+        <div class="mg-cell"><span class="m-ico">💰</span><span class="m-lbl">การเงิน</span><div class="m-val">${meaningData.money}</div></div>
+        <div class="mg-cell"><span class="m-ico">👨‍👩‍👧</span><span class="m-lbl">ครอบครัว</span><div class="m-val">${meaningData.family}</div></div>
+      </div>
+      ${canPick
+        ? `<button class="main-btn" style="width:100%;text-align:center;margin-top:0" onclick="pickCard(${idx});closePeek()">✦ เลือกไพ่ใบนี้ ✦</button>`
+        : alreadyPicked
+          ? `<div style="text-align:center;color:var(--gold);font-size:.85rem;padding:10px">✓ เลือกไพ่ใบนี้แล้ว</div>`
+          : `<div style="text-align:center;color:#8a7a5a;font-size:.85rem;padding:10px">เลือกครบ 3 ใบแล้ว</div>`
+      }
+      <button class="cm-close" onclick="closePeek()">ปิด</button>
+    </div>
+  </div>`);
+};
+window.closePeek = () => { document.getElementById("peek-modal")?.remove(); };
+
+window.pickCard = idx => {
+  if (selectedCards.length >= 3) return;
+  const c = deck[idx];
+  if (selectedCards.find(s => s.id === c.id)) return;
+  selectedCards.push(c);
+  const left = 3 - selectedCards.length;
+  document.getElementById("left-lbl").textContent = left;
+  renderDeckGrid();
+  renderSlots();
+  if (selectedCards.length === 3) {
+    document.getElementById("submit-area").classList.remove("hidden");
+  }
+};
+
+function renderSlots() {
+  const positions = ["อดีต · รากเหง้า","ปัจจุบัน · แก่นกลาง","อนาคต · ผลลัพธ์"];
+  [0,1,2].forEach(i => {
+    const slot = document.getElementById("slot-"+i);
+    if (!slot) return;
+    const c = selectedCards[i];
+    if (!c) {
+      slot.classList.remove("filled");
+      slot.innerHTML = `<div class="slot-pos">${positions[i]}</div><div style="color:#3a3028;font-size:.75rem;margin-top:20px">ยังไม่ได้เลือก</div>`;
+      return;
+    }
+    const cardData = ALL_CARDS.find(x => x.id === c.id);
+    slot.classList.add("filled");
+    slot.innerHTML = `
+      <div class="slot-pos">${positions[i]}</div>
+      <div class="slot-img-wrap ${c.reversed?"rev":""}">
+        <img src="${cardData.img}" alt="${cardData.nameTH}" 
+             onerror="this.parentElement.innerHTML='<div style=padding:8px;font-size:.65rem;color:var(--gold);text-align:center>${cardData.nameTH}</div>'">
+      </div>
+      <div class="slot-name">${cardData.nameTH}</div>
+      <div class="slot-orient">${c.reversed?"🔄 กลับหัว":"↑ ตั้ง"}</div>`;
+  });
+}
+
+window.startPick = () => {
+  const name = document.getElementById("f-name").value.trim();
+  const dob  = document.getElementById("f-dob").value;
+  const q    = document.getElementById("f-q").value.trim();
+  if (!name||!dob||!q) { alert("กรุณากรอกข้อมูลให้ครบทุกช่อง"); return; }
+  readingMeta = { name, dob, question: q };
+  document.getElementById("form-area").classList.add("hidden");
+  document.getElementById("pick-area").classList.remove("hidden");
+  buildDeck();
+};
+
+window.submitReading = async () => {
+  if (selectedCards.length < 3) { alert("กรุณาเลือกไพ่ครบ 3 ใบ"); return; }
+  const cards = selectedCards.map(c => {
+    const cd = ALL_CARDS.find(x => x.id === c.id);
+    return { id: c.id, name: cd.name, nameTH: cd.nameTH, img: cd.img, reversed: c.reversed };
+  });
+  const r = await api({
+    action: "submitReading",
+    uid: session.uid,
+    email: session.email,
+    displayName: readingMeta.name,
+    dob: readingMeta.dob,
+    question: readingMeta.question,
+    cards,
+  });
+  if (r.error) { alert("เกิดข้อผิดพลาด: "+r.error); return; }
+  document.getElementById("pick-area").classList.add("hidden");
+  document.getElementById("sent-area").classList.remove("hidden");
+};
+
+// ── HISTORY ────────────────────────────────────────
+async function loadHistory() {
+  const el = document.getElementById("hist-list");
+  if (!el) return;
+  el.innerHTML = '<div class="loading-msg">กำลังโหลด...</div>';
+  const r = await api({ method:"GET", action:"getMyReadings", uid: session.uid });
+  if (r.error || !r.readings?.length) {
+    el.innerHTML = '<div class="empty-msg">ยังไม่มีประวัติการดูดวง</div>';
+    return;
+  }
+  el.innerHTML = r.readings.map(rd => `
+    <div class="hist-item" onclick="openReading(${JSON.stringify(rd).replace(/"/g,"&quot;")})">
+      <div class="hist-top">
+        <span class="hist-date">${fmtDate(rd.createdAt)}</span>
+        <span class="badge ${rd.status}">${rd.status==="pending"?"⏳ รอคำทำนาย":rd.status==="answered"?"✅ มีคำทำนาย":"📖 อ่านแล้ว"}</span>
+      </div>
+      <div class="hist-q">"${rd.question}"</div>
+      <div class="chip-row">
+        ${(rd.cards||[]).map(c=>`<span class="chip ${c.reversed?"rev":""}">${c.nameTH} ${c.reversed?"↙":"↑"}</span>`).join("")}
+      </div>
+    </div>
+  `).join("");
+}
+
+window.openReading = rd => {
+  const positions = ["อดีต · รากเหง้า","ปัจจุบัน · แก่นกลาง","อนาคต · ผลลัพธ์"];
+  document.body.insertAdjacentHTML("beforeend", `
+  <div class="modal-bg" id="rd-modal" onclick="if(event.target===this)closeRd()">
+    <div class="modal">
+      <button class="modal-x" onclick="closeRd()">✕</button>
+      <div class="modal-title">🔮 ผลการดูดวง</div>
+      <div class="meta-box">
+        <p><strong>ชื่อ:</strong> ${rd.displayName}</p>
+        <p><strong>วันเกิด:</strong> ${rd.dob}</p>
+        <p><strong>คำถาม:</strong> "${rd.question}"</p>
+      </div>
+      <div class="spread-row">
+        ${(rd.cards||[]).map((c,i) => {
+          const cd = ALL_CARDS.find(x=>x.id===c.id) || c;
+          const m  = c.reversed ? (cd.reversed||{}) : (cd.upright||{});
+          return `
+          <div class="spread-card">
+            <div class="sp-pos">${positions[i]}</div>
+            <div class="sp-img ${c.reversed?"rev":""}">
+              <img src="${cd.img||c.img}" alt="${c.nameTH}"
+                   onerror="this.parentElement.innerHTML='<div style=padding:10px;color:var(--gold);font-size:.7rem;text-align:center>${c.nameTH}</div>'">
+            </div>
+            <div class="sp-cname">${c.nameTH}</div>
+            <div class="sp-orient">${c.reversed?"🔄 กลับหัว":"↑ ตั้ง"}</div>
+            <div class="sp-desc">${cd.desc||""}</div>
+            <hr class="sp-divider">
+            <div class="sp-row"><span class="sp-ico">❤️</span><div><strong>ความรัก</strong><span>${m.love||"—"}</span></div></div>
+            <div class="sp-row"><span class="sp-ico">💼</span><div><strong>การงาน</strong><span>${m.work||"—"}</span></div></div>
+            <div class="sp-row"><span class="sp-ico">💰</span><div><strong>การเงิน</strong><span>${m.money||"—"}</span></div></div>
+            <div class="sp-row"><span class="sp-ico">👨‍👩‍👧</span><div><strong>ครอบครัว</strong><span>${m.family||"—"}</span></div></div>
+          </div>`;
+        }).join("")}
+      </div>
+      ${rd.prediction
+        ? `<div class="pred-box">
+             <h3>🌙 คำทำนายจากโหร</h3>
+             <div class="pred-text">${rd.prediction}</div>
+           </div>
+           <div class="rate-block">
+             <h3>ให้คะแนนคำทำนาย</h3>
+             <div class="stars-row">
+               ${[1,2,3,4,5].map(i=>`<button class="star-btn ${(rd.userRating||0)>=i?"lit":""}" onclick="rateRd('${rd.id}',${i})">${(rd.userRating||0)>=i?"★":"☆"}</button>`).join("")}
+             </div>
+             ${rd.userComment
+               ? `<div style="color:#8a7a5a;font-size:.85rem;font-style:italic;background:rgba(0,0,0,.2);padding:12px;border-radius:8px">"${rd.userComment}"</div>`
+               : `<textarea class="field" id="cmt-box" placeholder="แสดงความคิดเห็น..." rows="2" style="margin-top:8px"></textarea>
+                  <button class="main-btn sm" onclick="submitCmt('${rd.id}')">ส่งความคิดเห็น</button>`
+             }
+             <div class="donate-box" style="margin-top:24px">
+               <h4>💛 บริจาคสนับสนุนโหร</h4>
+               <p>หากคำทำนายเป็นประโยชน์ สามารถบริจาคได้ตามอัธยาศัย</p>
+               <div class="qr-wrap">
+                 <img src="qr.jpg" alt="QR PromptPay" 
+                      onerror="this.style.display='none';document.getElementById('qr-fb').style.display='block'">
+                 <div class="qr-fallback" id="qr-fb" style="display:none">
+                   <p>PromptPay · นาย ไม้มงคล เจียมเจริญ</p>
+                   <small>เลขอ้างอิง 004999007816084</small>
+                 </div>
+               </div>
+             </div>`
+        : `<div class="wait-box">
+             <span class="wi">⏳</span>
+             <p>โหรกำลังพิจารณาคำทำนาย รอสักครู่</p>
+           </div>`
+      }
+    </div>
+  </div>`);
+
+  if (rd.status === "answered") {
+    api({ action:"rateReading", uid:session.uid, readingId:rd.id, rating: rd.userRating||0, comment:"" });
+  }
+
+  window.rateRd = async (id, v) => {
+    document.querySelectorAll(".star-btn").forEach((s,i)=>{
+      s.textContent = i<v?"★":"☆";
+      s.classList.toggle("lit", i<v);
+    });
+    await api({ action:"rateReading", uid:session.uid, readingId:id, rating:v, comment:"" });
+  };
+  window.submitCmt = async id => {
+    const c = document.getElementById("cmt-box")?.value;
+    if (!c) return;
+    await api({ action:"rateReading", uid:session.uid, readingId:id, rating:0, comment:c });
+    alert("ส่งความคิดเห็นแล้ว!");
+    closeRd();
+  };
+};
+window.closeRd = () => document.getElementById("rd-modal")?.remove();
+
+// ── REVIEWS ────────────────────────────────────────
+let revRating = 0;
+window.setRevStar = v => {
+  revRating = v;
+  document.querySelectorAll(".sp-star").forEach((s,i)=>{
+    s.textContent = i<v?"★":"☆";
+    s.classList.toggle("lit",i<v);
+  });
+  const labels=["","แย่มาก","พอใช้","ปานกลาง","ดี","ดีมาก"];
+  document.getElementById("rev-lbl").textContent = labels[v];
+};
+window.submitReview = async () => {
+  const text = document.getElementById("rev-txt")?.value.trim();
+  if (!text||!revRating) { alert("กรุณาเขียนรีวิวและให้คะแนน"); return; }
+  const anon = document.getElementById("anon-chk")?.checked;
+  await api({ action:"submitReview", uid:session.uid, email:session.email,
+    displayName:session.displayName, isAnon:anon, rating:revRating, text });
+  document.getElementById("rev-txt").value = "";
+  revRating = 0;
+  window.setRevStar(0);
+  alert("ขอบคุณสำหรับรีวิว!");
+  loadReviews();
+};
+async function loadReviews() {
+  const el = document.getElementById("revs-list");
+  if (!el) return;
+  const r = await api({ method:"GET", action:"getReviews" });
+  if (!r.reviews?.length) { el.innerHTML='<div class="empty-msg">ยังไม่มีรีวิว เป็นคนแรก!</div>'; return; }
+  const labels=["","★","★★","★★★","★★★★","★★★★★"];
+  el.innerHTML = r.reviews.map(rv=>`
+    <div class="rev-card">
+      <div class="rev-top">
+        <span class="rev-name">${rv.displayName}</span>
+        <span class="rev-stars">${labels[rv.rating]||""}</span>
+      </div>
+      <div class="rev-text">"${rv.text}"</div>
+      <div class="rev-date">${fmtDate(rv.createdAt)}</div>
+    </div>`).join("");
+}
+
+// ══════════════════════════════════════════════════════
+// HOST DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderHost() {
+  document.getElementById("root").innerHTML = `
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-logo">🌙 โหรแดชบอร์ด</div>
+      <div class="topbar-right">
+        <span class="topbar-user">ยินดีต้อนรับ โหร</span>
+        <button class="ghost-btn" onclick="doLogout()">ออก</button>
+      </div>
+    </header>
+    <nav class="navbar">
+      <button class="nav on" id="nav-pend" onclick="hostSec('pend')">⏳ รอทำนาย</button>
+      <button class="nav" id="nav-done" onclick="hostSec('done')">✅ ทำนายแล้ว</button>
+      <button class="nav" id="nav-hrev" onclick="hostSec('hrev')">⭐ รีวิว</button>
+    </nav>
+    <div class="sec on" id="sec-pend"><div class="wrap">
+      <div class="sec-head"><h2>✦ คำขอที่รอคำทำนาย ✦</h2></div>
+      <div id="pend-list"><div class="loading-msg">กำลังโหลด...</div></div>
+    </div></div>
+    <div class="sec" id="sec-done"><div class="wrap">
+      <div class="sec-head"><h2>✦ คำทำนายที่ส่งไปแล้ว ✦</h2></div>
+      <div id="done-list"><div class="loading-msg">กำลังโหลด...</div></div>
+    </div></div>
+    <div class="sec" id="sec-hrev"><div class="wrap">
+      <div class="sec-head"><h2>✦ รีวิวทั้งหมด ✦</h2></div>
+      <div id="hrev-list"><div class="loading-msg">กำลังโหลด...</div></div>
+    </div></div>
+  </div>`;
+  loadHostData();
+}
+
+window.hostSec = s => {
+  document.querySelectorAll(".sec").forEach(e=>e.classList.remove("on"));
+  document.querySelectorAll(".nav").forEach(e=>e.classList.remove("on"));
+  document.getElementById("sec-"+s).classList.add("on");
+  document.getElementById("nav-"+s).classList.add("on");
+  if (s==="hrev") loadHostReviews();
+};
+
+async function loadHostData() {
+  const r = await api({ method:"GET", action:"getReadings", email:HOST_EMAIL });
+  if (r.error) { document.getElementById("pend-list").innerHTML='<div class="empty-msg">'+r.error+'</div>'; return; }
+  const pending  = (r.readings||[]).filter(x=>x.status==="pending");
+  const answered = (r.readings||[]).filter(x=>x.status!=="pending");
+  const positions = ["อดีต","ปัจจุบัน","อนาคต"];
+
+  const renderHostCard = (rd, isPend) => `
+  <div class="host-reading">
+    <div class="hr-top">
+      <div><span class="hr-name">${rd.displayName}</span><span class="hr-email">${rd.email}</span></div>
+      <span class="hr-date">${fmtDate(rd.createdAt)}</span>
+    </div>
+    <div class="hr-dob">📅 เกิด: ${rd.dob}</div>
+    <div class="hr-q">"${rd.question}"</div>
+    <div class="hr-cards">
+      ${(rd.cards||[]).map((c,i)=>`
+        <div class="hr-card">
+          <div class="hr-card-pos">${positions[i]}</div>
+          <div class="hr-card-img ${c.reversed?"rev":""}">
+            <img src="${c.img}" alt="${c.nameTH}"
+                 onerror="this.parentElement.innerHTML='<div style=padding:6px;font-size:.6rem;color:var(--gold);text-align:center>${c.nameTH}</div>'"
+                 style="width:100%;display:block">
+          </div>
+          <div class="hr-card-name">${c.nameTH}</div>
+          <div class="hr-card-orient">${c.reversed?"🔄 กลับหัว":"↑ ตั้ง"}</div>
+        </div>`).join("")}
+    </div>
+    ${isPend
+      ? `<div class="compose-area">
+           <label class="lbl">✍️ เขียนคำทำนาย</label>
+           <textarea class="field" id="pred-${rd.id}" rows="7" placeholder="เขียนคำทำนายสำหรับ ${rd.displayName}..."></textarea>
+           <button class="main-btn sm" onclick="sendPred('${rd.id}')">📨 ส่งคำทำนาย</button>
+         </div>`
+      : `<div class="ans-box">
+           <strong>คำทำนายที่ส่งไป</strong>
+           <p>${rd.prediction||""}</p>
+           ${rd.userRating?`<div class="fb-row">คะแนน: <span class="fb-stars">${"★".repeat(rd.userRating)+"☆".repeat(5-rd.userRating)}</span></div>`:""}
+           ${rd.userComment?`<div class="fb-row comment-q">"${rd.userComment}"</div>`:""}
+         </div>`
+    }
+  </div>`;
+
+  const pEl = document.getElementById("pend-list");
+  const dEl = document.getElementById("done-list");
+  pEl.innerHTML = pending.length  ? pending.map(x=>renderHostCard(x,true)).join("")  : '<div class="empty-msg">ไม่มีคำขอที่รอ 🎉</div>';
+  dEl.innerHTML = answered.length ? answered.map(x=>renderHostCard(x,false)).join("") : '<div class="empty-msg">ยังไม่มีคำทำนาย</div>';
+}
+
+window.sendPred = async id => {
+  const text = document.getElementById("pred-"+id)?.value.trim();
+  if (!text) { alert("กรุณาเขียนคำทำนายก่อน"); return; }
+  const r = await api({ action:"sendPrediction", hostEmail:HOST_EMAIL, readingId:id, prediction:text });
+  if (r.error) { alert("เกิดข้อผิดพลาด: "+r.error); return; }
+  alert("ส่งคำทำนายสำเร็จ!");
+  loadHostData();
+};
+
+async function loadHostReviews() {
+  const el = document.getElementById("hrev-list");
+  if (!el) return;
+  const r = await api({ method:"GET", action:"getReviews" });
+  if (!r.reviews?.length) { el.innerHTML='<div class="empty-msg">ยังไม่มีรีวิว</div>'; return; }
+  const labels=["","★","★★","★★★","★★★★","★★★★★"];
+  el.innerHTML = r.reviews.map(rv=>`
+    <div class="rev-card">
+      <div class="rev-top">
+        <span class="rev-name">${rv.displayName}${rv.isAnon?` <em style="color:#5a5040;font-size:.75rem">(${rv.email||""})</em>`:""}</span>
+        <span class="rev-stars">${labels[rv.rating]||""}</span>
+      </div>
+      <div class="rev-text">"${rv.text}"</div>
+      <div class="rev-date">${fmtDate(rv.createdAt)}</div>
+    </div>`).join("");
+}
+
+// ── UTILS ────────────────────────────────────────────
+function fmtDate(s) {
+  if (!s) return "";
+  try { return new Date(s).toLocaleDateString("th-TH",{year:"numeric",month:"short",day:"numeric"}); }
+  catch(_) { return s; }
+}
+
+// ── BOOT ────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
